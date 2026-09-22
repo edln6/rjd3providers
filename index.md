@@ -1,0 +1,240 @@
+# {rjd3providers}
+
+[![R-CMD-check](https://github.com/rjdverse/rjd3providers/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/rjdverse/rjd3providers/actions/workflows/R-CMD-check.yml)
+[![lint](https://github.com/rjdverse/rjd3providers/actions/workflows/lint.yml/badge.svg)](https://github.com/rjdverse/rjd3providers/actions/workflows/lint.yml)
+
+[![GH Pages
+built](https://github.com/rjdverse/rjd3providers/actions/workflows/pkgdown.yml/badge.svg)](https://github.com/rjdverse/rjd3providers/actions/workflows/pkgdown.yml)
+
+## Overview
+
+**{rjd3providers}** contains functions to explore and modify the
+parameters of JDemetra 3.x time series providers (.xslx, .csv, .txt and
+.xml files) used in the Graphical User Interface. It allows to
+manipulate raw series files. For example, using this R package, you will
+be able to:
+
+- change the **path** of raw data
+- change the file **type**
+- manipulate **monikers**
+- change file **read properties**
+
+## Installation
+
+**{rjd3providers}** relies on the
+[**{rJava}**](https://CRAN.R-project.org/package=rJava) package.
+
+Running rjd3 packages requires **Java 21 or higher**. How to set up such
+a configuration in R is explained
+[here](https://doc.jdemetra.org/#Rconfig)
+
+**🎉 {rjd3providers} is now available on CRAN! 🎉**
+
+To install it, just launch the following command line:
+
+``` r
+
+install.packages("rjd3providers")
+```
+
+### Latest release
+
+To get the current stable version (from the latest release):
+
+- From GitHub:
+
+``` r
+
+# install.packages("remotes")
+remotes::install_github("rjdverse/rjd3providers@*release", build_vignettes = TRUE)
+```
+
+- From [r-universe](https://rjdverse.r-universe.dev/rjd3providers):
+
+``` r
+
+install.packages("rjd3providers", repos = c("https://rjdverse.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+### Development version
+
+You can install the development version of **{rjd3providers}** from
+[GitHub](https://github.com/) with:
+
+``` r
+
+# install.packages("remotes")
+remotes::install_github("rjdverse/rjd3providers")
+```
+
+## Usage
+
+### Generate all the TS information
+
+``` r
+
+library("rjd3providers")
+#> my Java class path: [1] "rjd3providers"
+#> 
+#>  [1] "/usr/local/lib/R/site-library/rJava/java"                                              
+#>  [2] "/usr/local/lib/R/site-library/rjd3jars/java"                                           
+#>  [3] "/usr/local/lib/R/site-library/rjd3jars/java/protobuf-java-4.33.1.jar"                  
+#>  [4] "/usr/local/lib/R/site-library/rjd3toolkit/java"                                        
+#>  [5] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-sa-base-api-3.6.0.jar"           
+#>  [6] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-sa-base-core-3.6.0.jar"          
+#>  [7] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-sa-base-protobuf-3.6.0.jar"      
+#>  [8] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-sa-base-r-3.6.0.jar"             
+#>  [9] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-toolkit-base-api-3.6.0.jar"      
+#> [10] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-toolkit-base-core-3.6.0.jar"     
+#> [11] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-toolkit-base-protobuf-3.6.0.jar" 
+#> [12] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-toolkit-base-r-3.6.0.jar"        
+#> [13] "/usr/local/lib/R/site-library/rjd3providers/java"                                      
+#> [14] "/usr/local/lib/R/site-library/rjd3providers/java/caffeine-3.2.3.jar"                   
+#> [15] "/usr/local/lib/R/site-library/rjd3providers/java/FastInfoset-1.2.15.jar"               
+#> [16] "/usr/local/lib/R/site-library/rjd3providers/java/istack-commons-runtime-3.0.7.jar"     
+#> [17] "/usr/local/lib/R/site-library/rjd3providers/java/java-io-base-0.0.35.jar"              
+#> [18] "/usr/local/lib/R/site-library/rjd3providers/java/java-io-picocsv-0.0.35.jar"           
+#> [19] "/usr/local/lib/R/site-library/rjd3providers/java/java-io-xml-0.0.35.jar"               
+#> [20] "/usr/local/lib/R/site-library/rjd3providers/java/java-io-xml-bind-0.0.35.jar"          
+#> [21] "/usr/local/lib/R/site-library/rjd3providers/java/javax.activation-api-1.2.0.jar"       
+#> [22] "/usr/local/lib/R/site-library/rjd3providers/java/jaxb-api-2.4.0-b180830.0359.jar"      
+#> [23] "/usr/local/lib/R/site-library/rjd3providers/java/jaxb-runtime-2.4.0-b180830.0438.jar"  
+#> [24] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-spreadsheet-base-api-3.6.0.jar"
+#> [25] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-spreadsheet-base-r-3.6.0.jar"  
+#> [26] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-text-base-api-3.6.0.jar"       
+#> [27] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-text-base-r-3.6.0.jar"         
+#> [28] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-toolkit-base-tsp-3.6.0.jar"    
+#> [29] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-toolkit-base-xml-3.6.0.jar"    
+#> [30] "/usr/local/lib/R/site-library/rjd3providers/java/picocsv-2.6.0.jar"                    
+#> [31] "/usr/local/lib/R/site-library/rjd3providers/java/spreadsheet-api-2.5.10.jar"           
+#> [32] "/usr/local/lib/R/site-library/rjd3providers/java/spreadsheet-standalone-2.5.10.jar"    
+#> [33] "/usr/local/lib/R/site-library/rjd3providers/java/stax-ex-1.8.jar"                      
+#> [34] "/usr/local/lib/R/site-library/rjd3providers/java/txw2-2.4.0-b180830.0438.jar"          
+#> my Java class path:  [1] "/usr/local/lib/R/site-library/rJava/java"                                              
+#>  [2] "/usr/local/lib/R/site-library/rjd3jars/java"                                           
+#>  [3] "/usr/local/lib/R/site-library/rjd3jars/java/protobuf-java-4.33.1.jar"                  
+#>  [4] "/usr/local/lib/R/site-library/rjd3toolkit/java"                                        
+#>  [5] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-sa-base-api-3.6.0.jar"           
+#>  [6] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-sa-base-core-3.6.0.jar"          
+#>  [7] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-sa-base-protobuf-3.6.0.jar"      
+#>  [8] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-sa-base-r-3.6.0.jar"             
+#>  [9] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-toolkit-base-api-3.6.0.jar"      
+#> [10] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-toolkit-base-core-3.6.0.jar"     
+#> [11] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-toolkit-base-protobuf-3.6.0.jar" 
+#> [12] "/usr/local/lib/R/site-library/rjd3toolkit/java/jdplus-toolkit-base-r-3.6.0.jar"        
+#> [13] "/usr/local/lib/R/site-library/rjd3providers/java"                                      
+#> [14] "/usr/local/lib/R/site-library/rjd3providers/java/caffeine-3.2.3.jar"                   
+#> [15] "/usr/local/lib/R/site-library/rjd3providers/java/FastInfoset-1.2.15.jar"               
+#> [16] "/usr/local/lib/R/site-library/rjd3providers/java/istack-commons-runtime-3.0.7.jar"     
+#> [17] "/usr/local/lib/R/site-library/rjd3providers/java/java-io-base-0.0.35.jar"              
+#> [18] "/usr/local/lib/R/site-library/rjd3providers/java/java-io-picocsv-0.0.35.jar"           
+#> [19] "/usr/local/lib/R/site-library/rjd3providers/java/java-io-xml-0.0.35.jar"               
+#> [20] "/usr/local/lib/R/site-library/rjd3providers/java/java-io-xml-bind-0.0.35.jar"          
+#> [21] "/usr/local/lib/R/site-library/rjd3providers/java/javax.activation-api-1.2.0.jar"       
+#> [22] "/usr/local/lib/R/site-library/rjd3providers/java/jaxb-api-2.4.0-b180830.0359.jar"      
+#> [23] "/usr/local/lib/R/site-library/rjd3providers/java/jaxb-runtime-2.4.0-b180830.0438.jar"  
+#> [24] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-spreadsheet-base-api-3.6.0.jar"
+#> [25] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-spreadsheet-base-r-3.6.0.jar"  
+#> [26] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-text-base-api-3.6.0.jar"       
+#> [27] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-text-base-r-3.6.0.jar"         
+#> [28] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-toolkit-base-tsp-3.6.0.jar"    
+#> [29] "/usr/local/lib/R/site-library/rjd3providers/java/jdplus-toolkit-base-xml-3.6.0.jar"    
+#> [30] "/usr/local/lib/R/site-library/rjd3providers/java/picocsv-2.6.0.jar"                    
+#> [31] "/usr/local/lib/R/site-library/rjd3providers/java/spreadsheet-api-2.5.10.jar"           
+#> [32] "/usr/local/lib/R/site-library/rjd3providers/java/spreadsheet-standalone-2.5.10.jar"    
+#> [33] "/usr/local/lib/R/site-library/rjd3providers/java/stax-ex-1.8.jar"                      
+#> [34] "/usr/local/lib/R/site-library/rjd3providers/java/txw2-2.4.0-b180830.0438.jar"          
+#> [1] "aa"
+
+xlsx_file <- paste0(system.file("extdata", package = "rjd3providers"), "/Insee.xlsx")
+
+spreadsheet_content(xlsx_file)
+#> $`FRANCE Textile`
+#> [1] "Textiles, industries de l'habillement, industrie du cuir et de la chaussure 001562874"
+#> [2] "Textiles 001563047"                                                                   
+#> [3] "Préparation de fibres textiles et filature 001563401"                                 
+#> [4] "Tissage 001563404"                                                                    
+#> [5] "Ennoblissement textile 001563407"                                                     
+#> [6] "Autres textiles 001563410"                                                            
+#> [7] "Industrie de l'habillement 001563050"                                                 
+#> [8] "Vêtements, autres qu'en fourrure 001563413"                                           
+#> [9] "Articles à mailles 001563416"                                                         
+#> 
+#> $`FRANCE Mat. transport`
+#> [1] "Industrie automobile 001562965"                             
+#> [2] "Construction de véhicules automobiles 001562980"            
+#> [3] "Carrosseries et remorques 001562983"                        
+#> [4] "Equipements automobiles 001562986"                          
+#> [5] "Autres matériels de transport 001562967"                    
+#> [6] "Navale 001562989"                                           
+#> [7] "Locomotives et autre matériel ferroviaire roulant 001562992"
+#> [8] "Aéronautique et spatiale 001563059"                         
+#> [9] "Matériels de transport n.c.a. 001563062"                    
+#> 
+#> $`FRANCE Mat. élect. `
+#>  [1] "Produits informatiques, électroniques et optiques 001562888"                                              
+#>  [2] "Composants et cartes électroniques 001562745"                                                             
+#>  [3] "Ordinateurs et d'équipements périphériques 001562748"                                                     
+#>  [4] "Equipements de communication 001562751"                                                                   
+#>  [5] "Produits électroniques grand public 001562814"                                                            
+#>  [6] "Instruments et d'appareils de mesure, d'essai et de navigation - horlogerie 001562817"                    
+#>  [7] "Equipements d'irradiation médicale, d'équipements électro médicaux et électro thérapeutiques"             
+#>  [8] "Matériels optique et photographique 001562823"                                                            
+#>  [9] "Equipements électriques 001562890"                                                                        
+#> [10] "Moteurs, génératrices et transformateurs électriques etmatériel de distribution et de commande électrique"
+#> [11] "Piles et accumulateurs électriques 001562829"                                                             
+#> [12] "Fils et câbles et matériel d'installation électrique 001562892"                                           
+#> [13] "Appareils d'éclairage électrique 001562895"                                                               
+#> [14] "Appareils ménagers 001562898"                                                                             
+#> [15] "Autres matériels électriques 001562901"                                                                   
+#> [16] "Machines et équipements n.c.a. 001562953"                                                                 
+#> [17] "Machines d'usage général 001562904"                                                                       
+#> [18] "Autres machines d'usage général 001562907"                                                                
+#> [19] "Machines agricoles et forestières 001562910"                                                              
+#> [20] "Machines de formage des métaux et machines-outils 001562974"                                              
+#> [21] "Autres machines d'usage spécifique 001562977"                                                             
+#> 
+#> $`FRANCE Alim. et tabac`
+#>  [1] "Industries alimentaires 001563038"                                                                 
+#>  [2] "Transformation et conservation de la viande et préparation de produits à base de viande  001563291"
+#>  [3] "Transformation et conservation de fruits et légumes 001563294"                                     
+#>  [4] "Fabrication d'huiles et graisses végétales et animales 001563297"                                  
+#>  [5] "Fabrication de produits laitiers 001563340"                                                        
+#>  [6] "Travail des grains - fabrication de produits amylacés 001563343"                                   
+#>  [7] "Fabrication de produits de boulangerie-pâtisserie et de pâtes alimentaires 001563346"              
+#>  [8] "Fabrication d'autres produits alimentaires001563349"                                               
+#>  [9] "Fabrication d'aliments pour animaux 001563352"                                                     
+#> [10] "Fabrication de boissons 001563041"                                                                 
+#> [11] "Fabrication de produits à base de tabac 001563044"
+
+ts1 <- spreadsheet_series(file = xlsx_file, sheet = 1L, series = 3)
+str(ts1)
+#> List of 4
+#>  $ name    : chr "FRANCE Textile\nPréparation de fibres textiles et filature 001563401"
+#>  $ moniker :List of 2
+#>   ..$ source: chr "XCLPRVDR"
+#>   ..$ id    : chr "demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=%2Fusr%2Flocal%2Flib%2FR%2Fsite-library%2Frjd3providers%2Fex"| __truncated__
+#>   ..- attr(*, "class")= chr "JD3_TSMONIKER"
+#>  $ metadata:List of 3
+#>   ..$ series.name     : chr "Préparation de fibres textiles et filature 001563401"
+#>   ..$ sheet.gridLayout: chr "VERTICAL"
+#>   ..$ sheet.name      : chr "FRANCE Textile"
+#>  $ data    : Time-Series [1:236] from 1990 to 2010: 315 296 318 280 279 ...
+#>   ..- attr(*, "name")= chr ""
+#>  - attr(*, "class")= chr "JD3_TS"
+
+all_ts <- spreadsheet_data(file = xlsx_file, sheet = 2L)
+```
+
+## Package Maintenance and contributing
+
+Any contribution is welcome and should be done through pull requests
+and/or issues. pull requests should include **updated tests** and
+**updated documentation**. If functionality is changed, docstrings
+should be added or updated.
+
+## Licensing
+
+The code of this project is licensed under the [European Union Public
+Licence
+(EUPL)](https://interoperable-europe.ec.europa.eu/collection/eupl/eupl-text-eupl-12).
